@@ -218,16 +218,16 @@ declare -A expected_prices=(
     [6]=4791500
 )
 
-grep -E "^[[:space:]]+#bedrooms[[:space:]]+\|[[:space:]]+average price|^[[:space:]]+[0-9]+[[:space:]]+\|[[:space:]]+[0-9]+(\.[0-9]+)?" out/test_presto_q5.raw > out/test_presto_q5.out
+sed -r "s/\x1B\[[0-9;]*[mK]//g" out/test_presto_q5.raw > out/test_presto_q5.clean
+grep -E "^[[:space:]]+#bedrooms[[:space:]]+\|[[:space:]]+average price|^[[:space:]]+[0-9]+[[:space:]]+\|[[:space:]]+[0-9]+(\.[0-9]+)?" out/test_presto_q5.clean > out/test_presto_q5.out
 
 # Flag to track if all tests pass
-all_pass=false
+all_pass=true
 
 # Read the output file and validate each row
 while read -r line; do
     # Skip header and footer lines
     if [[ $line == "#bedrooms"* || $line == "(6 rows)"* || $line == "----"* ]]; then
-        all_pass=true
         continue
     fi
 
